@@ -1,0 +1,889 @@
+/* app/styles.css */
+/* ==================== RESET & BASE STYLES ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 2rem 1.5rem;
+  min-height: 100vh;
+}
+
+/* ==================== MAIN CONTAINER ==================== */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ==================== PDF OPTIONS BAR (Screen Only) ==================== */
+.pdf-options-bar {
+  background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.5rem;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.options-header {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.option-btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 40px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.print-btn {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+.print-btn:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.pdf-btn {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+.pdf-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.option-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.recommended-badge {
+  background: #fbbf24;
+  color: #0f2b3d;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+.quality-note {
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==================== TOGGLE BUTTONS ==================== */
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.toggle-btn {
+  background: white;
+  border: 2px solid #0f2b3d;
+  color: #0f2b3d;
+  padding: 0.7rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+}
+
+.toggle-btn:hover {
+  background: #0f2b3d;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 43, 61, 0.2);
+}
+
+.toggle-btn.active {
+  background: #0f2b3d;
+  color: white;
+  box-shadow: 0 4px 12px rgba(15, 43, 61, 0.3);
+}
+
+/* ==================== DOCUMENT CARD ==================== */
+.document-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.2);
+}
+
+.compact-content {
+  padding: 1.5rem 2rem;
+}
+
+/* ==================== HEADER (Screen & Print) ==================== */
+.note-header {
+  background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%);
+  padding: 1.25rem 2rem;
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid #e6a017;
+}
+
+.brand h1 {
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.brand h1 span {
+  color: #f5b042;
+  font-weight: 800;
+}
+
+.brand p {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+.doc-badge {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.4rem 1.2rem;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== COMPACT GRID (Form Fields) ==================== */
+.compact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  margin-bottom: 1.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.compact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.compact-field label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #5b6e8c;
+  letter-spacing: 0.3px;
+}
+
+.compact-field input,
+.compact-field select {
+  background: white;
+  border: 1px solid #cfdee9;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.compact-field input:focus,
+.compact-field select:focus {
+  outline: none;
+  border-color: #e6a017;
+  box-shadow: 0 0 0 3px rgba(230, 160, 23, 0.1);
+}
+
+/* ==================== TABLE STYLES ==================== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+  border-radius: 16px;
+  border: 1px solid #e9edf2;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.items-table th {
+  background: #f1f5f9;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #475569;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.items-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #ecf3f9;
+  vertical-align: middle;
+}
+
+.items-table tfoot td {
+  background: #fef9e6;
+  font-weight: 700;
+  border-top: 2px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+}
+
+.items-table input.item-input,
+.items-table input.price-input,
+.items-table input.qty-input {
+  border: 1px solid #cfdee9;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.items-table input.price-input {
+  width: 110px;
+}
+
+.items-table input.qty-input {
+  width: 70px;
+  text-align: center;
+}
+
+.qty-cell {
+  text-align: center;
+}
+
+.total-cell {
+  font-weight: 600;
+  color: #0f3b2c;
+}
+
+.remove-row {
+  color: #dc2626;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.remove-row:hover {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.add-row-btn {
+  background: #0f2b3d;
+  border: none;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.5rem;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.add-row-btn:hover {
+  background: #1e4a6e;
+  transform: translateY(-1px);
+}
+
+/* ==================== SIGNATURES ==================== */
+.compact-signatures {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 2px dashed #cbd5e1;
+}
+
+.compact-sign {
+  flex: 1;
+}
+
+.compact-sign label {
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #4b5563;
+  display: block;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.sign-line {
+  border-bottom: 1.5px solid #a0afc3;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  font-style: italic;
+  font-size: 0.7rem;
+  color: #6b7280;
+  min-height: 40px;
+}
+
+input.sign-input {
+  border: none;
+  border-bottom: 1.5px solid #cbd5e6;
+  padding: 0.4rem 0;
+  width: 100%;
+  font-size: 0.85rem;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+input.sign-input:focus {
+  outline: none;
+  border-bottom-color: #e6a017;
+}
+
+/* ==================== QUOTATION SECTION ==================== */
+.quotation-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quotation-section {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.section-header {
+  background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%);
+  padding: 1.25rem 2rem;
+  color: white;
+}
+
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.25rem;
+}
+
+.section-header p {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.quotation-form {
+  padding: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #5b6e8c;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.form-field input,
+.form-field textarea {
+  border: 1px solid #cfdee9;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: #e6a017;
+  box-shadow: 0 0 0 3px rgba(230, 160, 23, 0.1);
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  background: #0f2b3d;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.8rem;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary:hover {
+  background: #1e4a6e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 43, 61, 0.2);
+}
+
+.quotation-customer-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 0.8rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  border: 1px solid #e4e7ec;
+}
+
+.compact-notes {
+  background: #fef9e6;
+  padding: 0.6rem 1rem;
+  border-left: 4px solid #e6a017;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  margin: 0.75rem 0;
+}
+
+/* ==================== RECEIPT SECTION ==================== */
+.receipt-summary {
+  background: #fef9e6;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  margin: 0.75rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  border-left: 4px solid #e6a017;
+}
+
+.status-badge {
+  background: #10b981;
+  color: white;
+  padding: 0.2rem 0.8rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.receipt-footer {
+  background: #f0fdf4;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #166534;
+}
+
+/* ==================== INVOICE SECTION ==================== */
+.invoice-parties {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.bill-to-section,
+.from-section {
+  flex: 1;
+  background: #f8fafc;
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid #e4e7ec;
+}
+
+.bill-to-section h4,
+.from-section h4 {
+  font-size: 0.8rem;
+  color: #0f2b3d;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid #e6a017;
+  display: inline-block;
+}
+
+.bill-to-section input,
+.from-section input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  margin: 0.2rem 0;
+  border: 1px solid #cfdee9;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.invoice-footer-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.bank-details-edit {
+  flex: 2;
+}
+
+.bank-details-edit label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #5b6e8c;
+}
+
+.bank-input {
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #cfdee9;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.amount-due-box {
+  text-align: right;
+  background: #fef9e6;
+  padding: 0.5rem 1.2rem;
+  border-radius: 12px;
+  border-left: 4px solid #e6a017;
+}
+
+.amount-due-box strong {
+  font-size: 1.1rem;
+  color: #0f2b3d;
+  margin-left: 0.5rem;
+}
+
+/* ==================== ACTION BUTTONS ==================== */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-reset {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-reset:hover {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+/* ==================== LOADING OVERLAY ==================== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.loading-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 24px;
+  text-align: center;
+  max-width: 320px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #0f2b3d;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-content p {
+  margin: 0.5rem 0;
+  color: #1e293b;
+}
+
+.loading-tip {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* ==================== PRINT STYLES (Styled Professional Print) ==================== */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+    margin: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .document-card {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: 100%;
+    margin: 0;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .compact-content {
+    padding: 0.5rem;
+  }
+
+  /* ===== STYLED HEADER FOR PRINT ===== */
+  .note-header {
+    background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 0.6rem 1rem !important;
+    border-bottom: 3px solid #e6a017 !important;
+    border-radius: 0 !important;
+  }
+
+  .brand h1 {
+    font-size: 1.2rem !important;
+    color: white !important;
+  }
+
+  .brand h1 span {
+    color: #f5b042 !important;
+  }
+
+  .brand p {
+    font-size: 0.6rem !important;
+    color: white !important;
+  }
+
+  .doc-badge {
+    background: rgba(255, 255, 255, 0.15) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* ===== QUOTATION HEADER ===== */
+  .section-header {
+    background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color: white !important;
+  }
+
+  .section-header h2,
+  .section-header p,
+  .section-header i {
+    color: white !important;
+  }
+
+  /* ===== TABLE STYLES ===== */
+  .items-table th {
+    background: #f1f5f9 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color: #1e293b !important;
+  }
+
+  .items-table tfoot td {
+    background: #fef9e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .total-cell {
+    font-weight: 700 !important;
+    color: #0f3b2c !important;
+  }
+
+  /* ===== FORM FIELDS (Show values only) ===== */
+  .compact-field input,
+  .compact-field select,
+  .bill-to-section input,
+  .from-section input,
+  .bank-input,
+  input.sign-input {
+    border: none !important;
+    background: transparent !important;
+    padding-left: 0 !important;
+    font-size: 0.7rem !important;
+    color: black !important;
+  }
+
+  /* ===== SIGNATURES ===== */
+  .compact-signatures {
+    border-top: 2px dashed #cbd5e1 !important;
+    margin-top: 0.8rem !important;
+    padding-top: 0.8rem !important;
+  }
+
+  .compact-sign label {
+    color: #4b5563 !important;
+  }
+
+  /* ===== RECEIPT & INVOICE HIGHLIGHTS ===== */
+  .receipt-summary,
+  .amount-due-box {
+    background: #fef9e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .status-badge {
+    background: #10b981 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color: white !important;
+  }
+
+  /* ===== HIDE BUTTONS ===== */
+  .remove-row,
+  .add-row-btn,
+  .action-buttons,
+  .toggle-buttons,
+  .pdf-options-bar {
+    display: none !important;
+  }
+
+  /* ===== PAGE BREAK CONTROL ===== */
+  .document-card,
+  .compact-content,
+  .compact-grid,
+  .table-wrapper,
+  .compact-signatures {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  @page {
+    size: A4;
+    margin: 0.4cm;
+  }
+}
