@@ -77,12 +77,12 @@ export default function AllDocumentsPage() {
   const [deliveryProducts, setDeliveryProducts] = useState<ProductRow[]>(defaultDeliveryProducts);
   const [deliveryNumber, setDeliveryNumber] = useState('DN-2409-001');
   const [deliveryDate, setDeliveryDate] = useState('');
-  const [address, setAddress] = useState('Plot 17, Industrial Area, Kampala, Uganda');
+  const [address, setAddress] = useState('Kampala, Uganda');
   const [orderRef, setOrderRef] = useState('PO-2456/DAH');
   const [vehiclePlate, setVehiclePlate] = useState('UBA 123K');
-  const [deliveredBy, setDeliveredBy] = useState('James K. Mwangi');
-  const [receivedBy, setReceivedBy] = useState('Sarah Wanjiku');
-  const [customerName, setCustomerName] = useState('Sarah Wanjiku');
+  const [deliveredBy, setDeliveredBy] = useState('darPaint');
+  const [receivedBy, setReceivedBy] = useState('darPaint');
+  const [customerName, setCustomerName] = useState('Name of customer');
 
   // ---- Quotation State ----
   const [quotationProducts, setQuotationProducts] = useState<ProductRow[]>(defaultQuotationProducts);
@@ -103,8 +103,8 @@ export default function AllDocumentsPage() {
   const [receiptDate, setReceiptDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [paymentStatus, setPaymentStatus] = useState('Paid');
-  const [receiptCustomerName, setReceiptCustomerName] = useState('Sarah Wanjiku');
-  const [receiptCustomerPhone, setReceiptCustomerPhone] = useState('+256 712 345 678');
+  const [receiptCustomerName, setReceiptCustomerName] = useState('darPaint');
+  const [receiptCustomerPhone, setReceiptCustomerPhone] = useState('+256 702 096 737');
 
   // ---- Invoice State ----
   const [invoiceProducts, setInvoiceProducts] = useState<ProductRow[]>(defaultInvoiceProducts);
@@ -113,15 +113,15 @@ export default function AllDocumentsPage() {
   const [dueDate, setDueDate] = useState('');
   const [bankDetails, setBankDetails] = useState('Bank of Uganda | Account: 1234567890 | Branch: Kampala Road');
   
-  const [billToName, setBillToName] = useState('Sarah Wanjiku');
+  const [billToName, setBillToName] = useState('darPaint');
   const [billToAddress, setBillToAddress] = useState('Kampala, Uganda');
-  const [billToPhone, setBillToPhone] = useState('+256 712 345 678');
-  const [billToEmail, setBillToEmail] = useState('sarah@example.com');
+  const [billToPhone, setBillToPhone] = useState('+256 702 096 737');
+  const [billToEmail, setBillToEmail] = useState('darpaint@gmail.com');
   
   const [fromCompany, setFromCompany] = useState('Dar Paint SMC Ltd');
-  const [fromAddress, setFromAddress] = useState('Plot 123, Namanve Industrial Park, Kampala, Uganda');
-  const [fromPhone, setFromPhone] = useState('+256 312 123456');
-  const [fromEmail, setFromEmail] = useState('info@darpaint.ug');
+  const [fromAddress, setFromAddress] = useState('Katwe Market, Kayemba Road | P.O Box Kampala, Kampala, Uganda');
+  const [fromPhone, setFromPhone] = useState('+256 702 096 737');
+  const [fromEmail, setFromEmail] = useState('darpaint@gmail.com');
   const [fromTin, setFromTin] = useState('1000123456');
 
   // Set initial dates after mount
@@ -363,12 +363,12 @@ export default function AllDocumentsPage() {
     // Delivery Note
     setDeliveryNumber('DN-2409-001');
     setDeliveryDate(new Date().toISOString().split('T')[0]);
-    setAddress('Plot 17, Industrial Area, Kampala, Uganda');
-    setOrderRef('PO-2456/DAH');
+    setAddress('Katwe Market, Kayemba Road | P.O Box Kampala');
+    setOrderRef('PO-2456/DAR');
     setVehiclePlate('UBA 123K');
-    setDeliveredBy('James K. Mwangi');
-    setReceivedBy('Sarah Wanjiku');
-    setCustomerName('Sarah Wanjiku');
+    setDeliveredBy('darPaint');
+    setReceivedBy('darPaint');
+    setCustomerName('darPaint');
     setDeliveryProducts(defaultDeliveryProducts);
     
     // Quotation
@@ -390,8 +390,8 @@ export default function AllDocumentsPage() {
     setReceiptDate(new Date().toISOString().split('T')[0]);
     setPaymentMethod('Cash');
     setPaymentStatus('Paid');
-    setReceiptCustomerName('Sarah Wanjiku');
-    setReceiptCustomerPhone('+256 712 345 678');
+    setReceiptCustomerName('darPaint');
+    setReceiptCustomerPhone('+256 702 096 737');
     
     // Invoice
     setInvoiceProducts(defaultInvoiceProducts);
@@ -401,10 +401,10 @@ export default function AllDocumentsPage() {
     date.setDate(date.getDate() + 30);
     setDueDate(date.toISOString().split('T')[0]);
     setBankDetails('Bank of Uganda | Account: 1234567890 | Branch: Kampala Road');
-    setBillToName('Sarah Wanjiku');
+    setBillToName('darPaint');
     setBillToAddress('Kampala, Uganda');
-    setBillToPhone('+256 712 345 678');
-    setBillToEmail('sarah@example.com');
+    setBillToPhone('+256 702 096 737');
+    setBillToEmail('darpaint@gmail.com');
     setFromCompany('Dar Paint SMC Ltd');
   }, []);
 
@@ -512,7 +512,7 @@ export default function AllDocumentsPage() {
         <h1>Dar <span>Paint</span> SMC Ltd</h1>
         <p>Industrial Coatings & Factory Supplies - Kampala, Uganda</p>
         <p style={{ fontSize: '0.7rem', marginTop: '2px' }}>
-          <i className="fas fa-map-marker-alt"></i> Plot 123, Namanve Industrial Park | Tel: +256 312 123456
+          <i className="fas fa-map-marker-alt"></i> Katwe Market, Kayemba Road | P.O Box Kampala | Tel: +256 702 096 737
         </p>
       </div>
       <div className="doc-badge">
@@ -770,7 +770,7 @@ export default function AllDocumentsPage() {
               <div className="compact-signatures">
                 <div className="compact-sign">
                   <label>CASHIER</label>
-                  <input type="text" className="sign-input" placeholder="Cashier name" defaultValue="John Mukasa" />
+                  <input type="text" className="sign-input" placeholder="Cashier name" defaultValue="DarPaint" />
                 </div>
                 <div className="compact-sign">
                   <label>CUSTOMER SIGNATURE</label>
