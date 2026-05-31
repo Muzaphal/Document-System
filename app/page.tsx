@@ -73,12 +73,12 @@ export default function AllDocumentsPage() {
   const [deliveryProducts, setDeliveryProducts] = useState<ProductRow[]>(defaultDeliveryProducts);
   const [deliveryNumber, setDeliveryNumber] = useState('DN-2409-001');
   const [deliveryDate, setDeliveryDate] = useState('');
-  const [address, setAddress] = useState('Katwe Market, Kayemba Road | P.O Box Kampala');
-  const [orderRef, setOrderRef] = useState('PO-2456/DAR');
+  const [address, setAddress] = useState('Kampala, Uganda');
+  const [orderRef, setOrderRef] = useState('PO-2456/DAH');
   const [vehiclePlate, setVehiclePlate] = useState('UBA 123K');
   const [deliveredBy, setDeliveredBy] = useState('darPaint');
   const [receivedBy, setReceivedBy] = useState('darPaint');
-  const [customerName, setCustomerName] = useState('darPaint');
+  const [customerName, setCustomerName] = useState('Name of customer');
 
   // ---- Quotation State ----
   const [quotationProducts, setQuotationProducts] = useState<ProductRow[]>(defaultQuotationProducts);
@@ -432,7 +432,7 @@ export default function AllDocumentsPage() {
 
   return (
     <div className="app-container">
-      {/* PDF Export Options - Only Print/Save as PDF */}
+      {/* Print Options - Only Print/Save as PDF */}
       <div className="pdf-options-bar no-print">
         <div className="options-header">
           <i className="fas fa-print"></i> Print Options
@@ -652,7 +652,7 @@ export default function AllDocumentsPage() {
               <div className="compact-signatures">
                 <div className="compact-sign">
                   <label>CASHIER</label>
-                  <input type="text" className="sign-input" placeholder="Cashier name" defaultValue="John Mukasa" />
+                  <input type="text" className="sign-input" placeholder="Cashier name" defaultValue="DarPaint" />
                 </div>
                 <div className="compact-sign">
                   <label>CUSTOMER SIGNATURE</label>
