@@ -2,8 +2,6 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 import './styles.css';
 
 // ==================== Types ====================
@@ -63,8 +61,6 @@ const defaultInvoiceProducts: ProductRow[] = [
 // ==================== Main Component ====================
 export default function AllDocumentsPage() {
   const [activeView, setActiveView] = useState<ActiveView>('delivery');
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   
   // Refs for each document type
@@ -77,12 +73,12 @@ export default function AllDocumentsPage() {
   const [deliveryProducts, setDeliveryProducts] = useState<ProductRow[]>(defaultDeliveryProducts);
   const [deliveryNumber, setDeliveryNumber] = useState('DN-2409-001');
   const [deliveryDate, setDeliveryDate] = useState('');
-  const [address, setAddress] = useState('Kampala, Uganda');
-  const [orderRef, setOrderRef] = useState('PO-2456/DAH');
+  const [address, setAddress] = useState('Katwe Market, Kayemba Road | P.O Box Kampala');
+  const [orderRef, setOrderRef] = useState('PO-2456/DAR');
   const [vehiclePlate, setVehiclePlate] = useState('UBA 123K');
   const [deliveredBy, setDeliveredBy] = useState('darPaint');
   const [receivedBy, setReceivedBy] = useState('darPaint');
-  const [customerName, setCustomerName] = useState('Name of customer');
+  const [customerName, setCustomerName] = useState('darPaint');
 
   // ---- Quotation State ----
   const [quotationProducts, setQuotationProducts] = useState<ProductRow[]>(defaultQuotationProducts);
@@ -145,109 +141,10 @@ export default function AllDocumentsPage() {
   const receiptTotal = receiptProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
   const invoiceTotal = invoiceProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
 
-  // ==================== PDF Generation Functions ====================
-  
-  const getCurrentDocumentElement = () => {
-    switch (activeView) {
-      case 'delivery':
-        return deliveryRef.current;
-      case 'quotation':
-        return showQuotationPreview ? quotationRef.current : null;
-      case 'receipt':
-        return receiptRef.current;
-      case 'invoice':
-        return invoiceRef.current;
-      default:
-        return null;
-    }
-  };
-
+  // ==================== Print Function ====================
   const handlePrint = useCallback(() => {
     window.print();
   }, []);
-
-  // Improved PDF Generation with Better Quality Settings
-  const handleDownloadPDF = useCallback(async () => {
-    const elementToCapture = getCurrentDocumentElement();
-    
-    if (!elementToCapture) {
-      alert('No content to export. Please generate a preview first for quotations.');
-      return;
-    }
-    
-    setIsDownloading(true);
-    setDownloadProgress(10);
-    
-    try {
-      setDownloadProgress(30);
-      
-      // Enhanced html2canvas options for better quality
-      const canvas = await html2canvas(elementToCapture, {
-        scale: 3, // Higher scale for better resolution
-        logging: false,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        windowWidth: elementToCapture.scrollWidth,
-        windowHeight: elementToCapture.scrollHeight,
-        onclone: (clonedDoc, element) => {
-          // Ensure cloned element has proper styles
-          const clonedCard = clonedDoc.querySelector('.document-card');
-          if (clonedCard) {
-            (clonedCard as HTMLElement).style.padding = '10px';
-          }
-        }
-      });
-      
-      setDownloadProgress(75);
-      
-      // Maximum quality image
-      const imgData = canvas.toDataURL('image/png', 1.0);
-      
-      // Create PDF with high quality settings
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: false, // No compression for better quality
-      });
-      
-      const imgWidth = 190; // A4 width minus margins
-      const pageHeight = 277; // A4 height minus margins
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      // Add image with high quality
-      pdf.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight, undefined, 'FAST');
-      
-      // Handle multi-page documents
-      if (imgHeight > pageHeight) {
-        let heightLeft = imgHeight - pageHeight;
-        let position = -pageHeight;
-        
-        while (heightLeft > 0) {
-          position = position - pageHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight, undefined, 'FAST');
-          heightLeft -= pageHeight;
-        }
-      }
-      
-      setDownloadProgress(100);
-      
-      const fileName = `${activeView.toUpperCase()}-${Date.now()}.pdf`;
-      pdf.save(fileName);
-      
-      setTimeout(() => {
-        setIsDownloading(false);
-        setDownloadProgress(0);
-      }, 500);
-      
-    } catch (error) {
-      console.error('PDF generation failed:', error);
-      alert('PDF generation failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
-      setIsDownloading(false);
-      setDownloadProgress(0);
-    }
-  }, [activeView, showQuotationPreview]);
 
   // ==================== Handlers ====================
   const updateDeliveryRow = useCallback((index: number, field: keyof ProductRow, value: string | number) => {
@@ -521,16 +418,6 @@ export default function AllDocumentsPage() {
     </div>
   );
 
-  const LoadingOverlay = () => (
-    <div className="loading-overlay no-print">
-      <div className="loading-content">
-        <div className="spinner"></div>
-        <p>Generating PDF... {downloadProgress}%</p>
-        <p className="loading-tip">Please wait, this may take a few seconds</p>
-      </div>
-    </div>
-  );
-
   if (!isMounted) {
     return (
       <div className="app-container">
@@ -545,24 +432,19 @@ export default function AllDocumentsPage() {
 
   return (
     <div className="app-container">
-      {isDownloading && <LoadingOverlay />}
-
-      {/* PDF Export Options */}
+      {/* PDF Export Options - Only Print/Save as PDF */}
       <div className="pdf-options-bar no-print">
         <div className="options-header">
-          <i className="fas fa-download"></i> Export Options
+          <i className="fas fa-print"></i> Print Options
         </div>
         <div className="options-buttons">
           <button className="option-btn print-btn" onClick={handlePrint}>
             <i className="fas fa-print"></i> Print / Save as PDF
             <span className="recommended-badge">Best Quality</span>
           </button>
-          <button className="option-btn pdf-btn" onClick={handleDownloadPDF} disabled={isDownloading}>
-            <i className="fas fa-file-pdf"></i> Download PDF
-          </button>
         </div>
         <div className="quality-note">
-          <i className="fas fa-info-circle"></i> For best quality, use "Print / Save as PDF"
+          <i className="fas fa-info-circle"></i> On mobile, select "Save as PDF" or "Save to Files" from the print dialog
         </div>
       </div>
 
@@ -770,7 +652,7 @@ export default function AllDocumentsPage() {
               <div className="compact-signatures">
                 <div className="compact-sign">
                   <label>CASHIER</label>
-                  <input type="text" className="sign-input" placeholder="Cashier name" defaultValue="DarPaint" />
+                  <input type="text" className="sign-input" placeholder="Cashier name" defaultValue="John Mukasa" />
                 </div>
                 <div className="compact-sign">
                   <label>CUSTOMER SIGNATURE</label>
