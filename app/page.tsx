@@ -143,8 +143,18 @@ export default function AllDocumentsPage() {
 
   // ==================== Print Function ====================
   const handlePrint = useCallback(() => {
-    window.print();
-  }, []);
+ // Store original title
+  const originalTitle = document.title;
+  // Set a blank title temporarily
+  document.title = ' ';
+  
+  // Trigger print
+  window.print();
+  
+  // Restore original title after print dialog closes
+  setTimeout(() => {
+    document.title = originalTitle;
+  }, 100);  }, []);
 
   // ==================== Handlers ====================
   const updateDeliveryRow = useCallback((index: number, field: keyof ProductRow, value: string | number) => {

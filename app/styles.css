@@ -73,6 +73,18 @@ body {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
+.pdf-btn {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+.pdf-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
 .option-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -153,7 +165,7 @@ body {
   padding: 1.5rem 2rem;
 }
 
-/* ==================== HEADER ==================== */
+/* ==================== HEADER (Screen & Print) ==================== */
 .note-header {
   background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%);
   padding: 1.25rem 2rem;
@@ -193,7 +205,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ==================== COMPACT GRID ==================== */
+/* ==================== COMPACT GRID (Form Fields) ==================== */
 .compact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -671,18 +683,95 @@ input.sign-input:focus {
   transform: translateY(-1px);
 }
 
-/* ==================== PRINT STYLES - FORCED ONE PAGE ON ALL DEVICES ==================== */
+/* ==================== LOADING OVERLAY ==================== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.loading-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 24px;
+  text-align: center;
+  max-width: 320px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #0f2b3d;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-content p {
+  margin: 0.5rem 0;
+  color: #1e293b;
+}
+
+.loading-tip {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* ==================== PRINT STYLES (Styled Professional Print) ==================== */
+/* ==================== PRINT STYLES - Balanced & Professional ==================== */
 @media print {
-  /* Reset all margins and padding */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+   /* Force remove browser headers/footers - stronger version */
+  @page {
+    size: A4;
+    margin: 1.2cm;
   }
 
+  /* Hide browser-added header/footer elements */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Remove any browser-generated content */
+  body::before,
+  body::after,
+  html::before,
+  html::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Your existing print styles continue here... */
   body {
     background: white;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide any extra browser-generated content */
+  html, body {
+    margin: 0 !important;
     padding: 0 !important;
+  }
+  body {
+    background: white;
+    padding: 0.5cm !important;
     margin: 0 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -693,264 +782,392 @@ input.sign-input:focus {
     display: none !important;
   }
 
-  /* Force document to one page */
+  /* Document card print styling - properly spaced */
   .document-card {
     box-shadow: none !important;
-    border-radius: 0 !important;
+    border-radius: 8px !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
   }
 
+  /* Main content padding - balanced spacing */
   .compact-content {
-    padding: 0.2rem !important;
+    padding: 1rem 1.2rem !important;
     margin: 0 !important;
   }
 
-  /* Compressed Header */
+  /* ===== HEADER STYLES - Balanced ===== */
   .note-header {
-    padding: 0.3rem 0.5rem !important;
-    margin-bottom: 0.2rem !important;
+    background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    padding: 0.8rem 1.2rem !important;
+    border-bottom: 3px solid #e6a017 !important;
+    border-radius: 6px 6px 0 0 !important;
   }
 
   .brand h1 {
-    font-size: 0.9rem !important;
+    font-size: 1.3rem !important;
     margin: 0 !important;
+    color: white !important;
+    font-weight: 700 !important;
+  }
+
+  .brand h1 span {
+    color: #f5b042 !important;
   }
 
   .brand p {
-    font-size: 0.55rem !important;
-    margin: 0 !important;
-    line-height: 1.2 !important;
+    font-size: 0.65rem !important;
+    margin-top: 4px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    line-height: 1.3 !important;
   }
 
   .doc-badge {
-    font-size: 0.55rem !important;
-    padding: 0.15rem 0.5rem !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 0.35rem 1rem !important;
+    border-radius: 40px !important;
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
   }
 
-  /* Compact Grid - Tighter spacing */
+  /* ===== FORM GRID - Properly spaced ===== */
   .compact-grid {
-    gap: 0.3rem !important;
-    padding: 0.3rem !important;
-    margin-bottom: 0.3rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 0.8rem !important;
+    background: #f8fafc !important;
+    padding: 0.8rem 1rem !important;
+    border-radius: 10px !important;
+    margin-bottom: 1rem !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .compact-field {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.25rem !important;
   }
 
   .compact-field label {
-    font-size: 0.5rem !important;
+    font-size: 0.6rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    color: #5b6e8c !important;
+    letter-spacing: 0.5px !important;
   }
 
   .compact-field input,
   .compact-field select {
-    font-size: 0.55rem !important;
-    padding: 0.15rem 0.3rem !important;
     border: none !important;
     background: transparent !important;
+    padding: 0.3rem 0 !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    width: 100% !important;
   }
 
-  /* Table - Compressed */
+  /* ===== TABLE STYLES - Well spaced ===== */
   .table-wrapper {
-    margin: 0.2rem 0 !important;
-    overflow: visible !important;
+    margin: 1rem 0 !important;
+    border-radius: 10px !important;
+    border: 1px solid #e2e8f0 !important;
+    overflow-x: visible !important;
   }
 
   .items-table {
-    font-size: 0.6rem !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 0.75rem !important;
   }
 
   .items-table th {
-    padding: 0.2rem 0.3rem !important;
-    font-size: 0.55rem !important;
+    background: #f1f5f9 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 0.6rem 0.8rem !important;
+    text-align: left !important;
+    font-weight: 700 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    color: #475569 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
   }
 
   .items-table td {
-    padding: 0.15rem 0.3rem !important;
+    padding: 0.6rem 0.8rem !important;
+    border-bottom: 1px solid #ecf3f9 !important;
+    vertical-align: top !important;
   }
 
-  .items-table input.price-input,
-  .items-table input.qty-input,
-  .items-table input.item-input {
-    font-size: 0.55rem !important;
-    padding: 0.1rem 0.2rem !important;
+  .items-table tfoot td {
+    background: #fef9e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-weight: 700 !important;
+    padding: 0.6rem 0.8rem !important;
+    border-top: 2px solid #e2e8f0 !important;
   }
 
-  /* Signatures - Compact */
+  .total-cell {
+    font-weight: 700 !important;
+    color: #0f3b2c !important;
+  }
+
+  /* ===== SIGNATURES - Properly spaced ===== */
   .compact-signatures {
-    margin-top: 0.3rem !important;
-    padding-top: 0.3rem !important;
-    gap: 0.8rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 1.5rem !important;
+    margin-top: 1.2rem !important;
+    padding-top: 1rem !important;
+    border-top: 2px dashed #cbd5e1 !important;
+  }
+
+  .compact-sign {
+    flex: 1 !important;
   }
 
   .compact-sign label {
-    font-size: 0.55rem !important;
+    font-weight: 700 !important;
+    font-size: 0.65rem !important;
+    text-transform: uppercase !important;
+    color: #4b5563 !important;
+    display: block !important;
+    margin-bottom: 0.4rem !important;
+    letter-spacing: 0.5px !important;
   }
 
   .sign-line {
-    margin-top: 0.15rem !important;
-    padding-top: 0.15rem !important;
-    min-height: 25px !important;
+    border-bottom: 1px solid #a0afc3 !important;
+    margin-top: 0.4rem !important;
+    padding-top: 0.4rem !important;
+    font-style: italic !important;
+    font-size: 0.65rem !important;
+    color: #6b7280 !important;
+    min-height: 35px !important;
   }
 
   input.sign-input {
-    font-size: 0.6rem !important;
-    padding: 0.1rem 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #cbd5e6 !important;
+    padding: 0.3rem 0 !important;
+    width: 100% !important;
+    font-size: 0.75rem !important;
+    background: transparent !important;
+    font-weight: 500 !important;
   }
 
-  /* Quotation specific */
+  /* ===== QUOTATION SPECIFIC ===== */
   .quotation-customer-info {
-    padding: 0.2rem 0.5rem !important;
-    margin-bottom: 0.3rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 0.8rem !important;
+    background: #f8fafc !important;
+    padding: 0.6rem 1rem !important;
+    border-radius: 10px !important;
+    margin-bottom: 1rem !important;
+    border: 1px solid #e4e7ec !important;
   }
 
   .quotation-customer-info p {
-    font-size: 0.55rem !important;
-    margin: 0.1rem 0 !important;
+    font-size: 0.7rem !important;
+    margin: 0.2rem 0 !important;
   }
 
   .compact-notes {
-    padding: 0.2rem 0.5rem !important;
-    font-size: 0.55rem !important;
-    margin: 0.2rem 0 !important;
+    background: #fef9e6 !important;
+    padding: 0.5rem 0.8rem !important;
+    border-left: 3px solid #e6a017 !important;
+    border-radius: 8px !important;
+    font-size: 0.7rem !important;
+    margin: 0.8rem 0 !important;
   }
 
-  /* Invoice specific */
+  /* ===== INVOICE SPECIFIC ===== */
   .invoice-parties {
-    gap: 0.5rem !important;
-    margin-bottom: 0.3rem !important;
+    display: flex !important;
+    gap: 1rem !important;
+    margin-bottom: 1rem !important;
   }
 
-  .bill-to-section, .from-section {
-    padding: 0.2rem !important;
+  .bill-to-section,
+  .from-section {
+    flex: 1 !important;
+    background: #f8fafc !important;
+    padding: 0.6rem !important;
+    border-radius: 10px !important;
+    border: 1px solid #e4e7ec !important;
   }
 
-  .bill-to-section h4, .from-section h4 {
-    font-size: 0.6rem !important;
-    margin-bottom: 0.15rem !important;
+  .bill-to-section h4,
+  .from-section h4 {
+    font-size: 0.7rem !important;
+    color: #0f2b3d !important;
+    margin-bottom: 0.4rem !important;
+    padding-bottom: 0.2rem !important;
+    border-bottom: 2px solid #e6a017 !important;
+    display: inline-block !important;
   }
 
-  .bill-to-section input, .from-section input {
-    font-size: 0.55rem !important;
-    padding: 0.1rem 0.2rem !important;
-    margin: 0.1rem 0 !important;
+  .bill-to-section input,
+  .from-section input {
+    width: 100% !important;
+    padding: 0.3rem 0 !important;
+    margin: 0.15rem 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    font-size: 0.7rem !important;
+    background: transparent !important;
   }
 
-  /* Receipt specific */
+  /* ===== RECEIPT SPECIFIC ===== */
   .receipt-summary {
-    padding: 0.2rem 0.5rem !important;
-    margin: 0.2rem 0 !important;
-    font-size: 0.6rem !important;
+    background: #fef9e6 !important;
+    padding: 0.6rem 1rem !important;
+    border-radius: 10px !important;
+    margin: 0.8rem 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+    font-size: 0.75rem !important;
+    border-left: 4px solid #e6a017 !important;
   }
 
   .status-badge {
-    font-size: 0.5rem !important;
-    padding: 0.1rem 0.4rem !important;
+    background: #10b981 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color: white !important;
+    padding: 0.15rem 0.6rem !important;
+    border-radius: 20px !important;
+    font-size: 0.6rem !important;
+    font-weight: 600 !important;
   }
 
   .receipt-footer {
-    padding: 0.2rem !important;
-    font-size: 0.55rem !important;
-    margin-top: 0.2rem !important;
+    background: #f0fdf4 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    margin-top: 0.8rem !important;
+    text-align: center !important;
+    font-size: 0.65rem !important;
+    color: #166534 !important;
   }
 
-  /* Invoice footer */
+  /* ===== INVOICE FOOTER ===== */
   .invoice-footer-info {
-    margin: 0.3rem 0 !important;
-    padding: 0.2rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    margin: 0.8rem 0 !important;
+    padding: 0.6rem !important;
+    background: #f8fafc !important;
+    border-radius: 10px !important;
+    flex-wrap: wrap !important;
   }
 
   .bank-details-edit label {
-    font-size: 0.55rem !important;
+    font-size: 0.6rem !important;
+    font-weight: 600 !important;
+    display: block !important;
+    margin-bottom: 0.2rem !important;
+    color: #5b6e8c !important;
   }
 
   .bank-input {
-    font-size: 0.55rem !important;
-    padding: 0.15rem 0.3rem !important;
+    width: 100% !important;
+    padding: 0.3rem 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    font-size: 0.7rem !important;
+    background: transparent !important;
   }
 
   .amount-due-box {
-    padding: 0.15rem 0.5rem !important;
+    text-align: right !important;
+    background: #fef9e6 !important;
+    padding: 0.4rem 1rem !important;
+    border-radius: 10px !important;
+    border-left: 4px solid #e6a017 !important;
   }
 
   .amount-due-box strong {
-    font-size: 0.7rem !important;
+    font-size: 0.9rem !important;
+    color: #0f2b3d !important;
+    margin-left: 0.5rem !important;
   }
 
-  /* Hide any extra elements */
+  /* ===== SECTION HEADER FOR QUOTATION ===== */
+  .section-header {
+    background: linear-gradient(135deg, #0f2b3d 0%, #1a4a66 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    padding: 0.8rem 1.2rem !important;
+    border-radius: 6px !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .section-header h2 {
+    font-size: 1rem !important;
+    color: white !important;
+    margin: 0 !important;
+  }
+
+  .section-header p {
+    font-size: 0.65rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    margin-top: 0.2rem !important;
+  }
+
+  /* ===== HIDE ALL BUTTONS AND UI ELEMENTS ===== */
   .remove-row,
   .add-row-btn,
   .action-buttons,
   .toggle-buttons,
-  .pdf-options-bar {
+  .pdf-options-bar,
+  .no-print {
     display: none !important;
   }
 
-  /* Force single page - critical for mobile */
-  @page {
-    size: A4;
-    margin: 0.2cm;
-  }
-
-  /* Prevent any page breaks inside elements */
-  .document-card, 
-  .compact-content, 
+  /* ===== PAGE BREAK CONTROL - Prevent unwanted breaks ===== */
+  .document-card,
+  .compact-content,
   .compact-grid,
   .table-wrapper,
   .compact-signatures,
   .invoice-parties,
-  .receipt-summary {
+  .receipt-summary,
+  .quotation-customer-info {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
-  /* Ensure all content fits on one page */
-  body, .app-container, .document-card {
-    height: auto !important;
-    max-height: none !important;
+  /* ===== PAGE MARGINS ===== */
+  @page {
+    size: A4;
+    margin: 1.2cm;
   }
 
-  /* Remove any extra spacing */
-  .app-container {
-    gap: 0 !important;
-  }
-}
-
-/* ==================== MOBILE PRINT FIXES ==================== */
-@media print and (max-width: 768px) {
-  /* Extra compression for mobile */
-  .brand h1 {
-    font-size: 0.8rem !important;
-  }
-  
-  .brand p {
-    font-size: 0.5rem !important;
-  }
-  
-  .items-table {
-    font-size: 0.55rem !important;
-  }
-  
-  .compact-field label {
-    font-size: 0.45rem !important;
-  }
-  
-  .compact-field input,
-  .compact-field select {
-    font-size: 0.5rem !important;
-  }
-  
-  /* Reduce padding further */
-  .compact-content {
-    padding: 0.1rem !important;
-  }
-  
-  .compact-grid {
-    gap: 0.2rem !important;
-    padding: 0.2rem !important;
+  /* Ensure body doesn't have extra margins */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
