@@ -559,6 +559,19 @@ input.sign-input:focus {
   font-weight: 600;
 }
 
+/* NEW: Status badge colors for different payment statuses */
+.status-badge.paid {
+  background: #10b981 !important;
+}
+
+.status-badge.partial {
+  background: #f59e0b !important;
+}
+
+.status-badge.pending {
+  background: #ef4444 !important;
+}
+
 .receipt-footer {
   background: #f0fdf4;
   padding: 0.5rem 1rem;
@@ -567,6 +580,28 @@ input.sign-input:focus {
   text-align: center;
   font-size: 0.7rem;
   color: #166534;
+}
+
+/* ==================== RECEIPT AMOUNT INPUT FIELDS (NEW) ==================== */
+.receipt-amount-input {
+  background: white;
+  border: 1px solid #cfdee9;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.receipt-amount-input:focus {
+  outline: none;
+  border-color: #e6a017;
+  box-shadow: 0 0 0 3px rgba(230, 160, 23, 0.1);
+}
+
+.balance-display {
+  cursor: not-allowed;
 }
 
 /* ==================== INVOICE SECTION ==================== */
@@ -732,11 +767,9 @@ input.sign-input:focus {
   color: #6b7280;
 }
 
-/* ==================== PRINT STYLES (Styled Professional Print) ==================== */
 /* ==================== PRINT STYLES - Balanced & Professional ==================== */
 @media print {
-
-   /* Force remove browser headers/footers - stronger version */
+  /* Force remove browser headers/footers */
   @page {
     size: A4;
     margin: 1.2cm;
@@ -757,18 +790,6 @@ input.sign-input:focus {
     content: none !important;
   }
 
-  /* Your existing print styles continue here... */
-  body {
-    background: white;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* Hide any extra browser-generated content */
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
   body {
     background: white;
     padding: 0.5cm !important;
@@ -877,6 +898,22 @@ input.sign-input:focus {
     color: #1e293b !important;
     border-bottom: 1px solid #cbd5e1 !important;
     width: 100% !important;
+  }
+
+  /* ===== RECEIPT AMOUNT FIELDS IN PRINT ===== */
+  .receipt-amount-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0.3rem 0 !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    width: 100% !important;
+  }
+
+  .balance-display {
+    font-weight: 700 !important;
   }
 
   /* ===== TABLE STYLES - Well spaced ===== */
@@ -1060,6 +1097,18 @@ input.sign-input:focus {
     font-weight: 600 !important;
   }
 
+  .status-badge.paid {
+    background: #10b981 !important;
+  }
+
+  .status-badge.partial {
+    background: #f59e0b !important;
+  }
+
+  .status-badge.pending {
+    background: #ef4444 !important;
+  }
+
   .receipt-footer {
     background: #f0fdf4 !important;
     padding: 0.4rem 0.8rem !important;
@@ -1159,15 +1208,21 @@ input.sign-input:focus {
     break-inside: avoid !important;
   }
 
-  /* ===== PAGE MARGINS ===== */
-  @page {
-    size: A4;
-    margin: 1.2cm;
-  }
-
   /* Ensure body doesn't have extra margins */
   body {
     margin: 0 !important;
     padding: 0 !important;
   }
+  /* Add to your styles.css - Share Button Styling */
+.share-btn {
+  background: #25D366; /* WhatsApp Green */
+  color: white;
+  box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);
+}
+
+.share-btn:hover {
+  background: #128C7E;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
 }

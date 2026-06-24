@@ -2,6 +2,8 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import './styles.css';
 
 // ==================== Types ====================
@@ -101,6 +103,10 @@ export default function AllDocumentsPage() {
   const [paymentStatus, setPaymentStatus] = useState('Paid');
   const [receiptCustomerName, setReceiptCustomerName] = useState('darPaint');
   const [receiptCustomerPhone, setReceiptCustomerPhone] = useState('+256 702 096 737');
+  
+  // NEW: Payment tracking fields for receipt
+  const [amountPaid, setAmountPaid] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
 
   // ---- Invoice State ----
   const [invoiceProducts, setInvoiceProducts] = useState<ProductRow[]>(defaultInvoiceProducts);
@@ -135,26 +141,107 @@ export default function AllDocumentsPage() {
     }
   }, []);
 
-  // Computed Totals
+  // ==================== COMPUTED TOTALS ====================
   const deliveryTotal = deliveryProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
   const quotationTotal = quotationProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
   const receiptTotal = receiptProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
   const invoiceTotal = invoiceProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
 
-  // ==================== Print Function ====================
+  // Auto-calculate balance when total or amount paid changes
+  useEffect(() => {
+    if (receiptTotal > 0) {
+      const calculatedBalance = receiptTotal - amountPaid;
+      setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
+    } else if (receiptTotal === 0) {
+      setBalance(0);
+    }
+  }, [receiptTotal, amountPaid]);
+
+  // ==================== PDF Generation Functions ====================
+
+  // Print Function
   const handlePrint = useCallback(() => {
- // Store original title
-  const originalTitle = document.title;
-  // Set a blank title temporarily
-  document.title = ' ';
-  
-  // Trigger print
-  window.print();
-  
-  // Restore original title after print dialog closes
-  setTimeout(() => {
-    document.title = originalTitle;
-  }, 100);  }, []);
+    const originalTitle = document.title;
+    document.title = ' ';
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 100);
+  }, []);
+
+  // Share PDF Function - For WhatsApp and other sharing
+  const handleSharePDF = useCallback(async () => {
+    let elementToCapture = null;
+    switch (activeView) {
+      case 'delivery':
+        elementToCapture = deliveryRef.current;
+        break;
+      case 'quotation':
+        elementToCapture = quotationRef.current;
+        break;
+      case 'receipt':
+        elementToCapture = receiptRef.current;
+        break;
+      case 'invoice':
+        elementToCapture = invoiceRef.current;
+        break;
+      default:
+        elementToCapture = null;
+    }
+
+    if (!elementToCapture) {
+      alert('No content to export. Please generate a preview first for quotations.');
+      return;
+    }
+
+    try {
+      const canvas = await html2canvas(elementToCapture, {
+        scale: 2.5,
+        logging: false,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const imgWidth = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 10, 0, imgWidth, imgHeight);
+
+      // Create a proper PDF blob with correct MIME type
+      const pdfBlob = pdf.output('blob');
+      const file = new File([pdfBlob], `${activeView.toUpperCase()}-${Date.now()}.pdf`, {
+        type: 'application/pdf',
+      });
+
+      // Use Web Share API on mobile devices
+      if (navigator.share) {
+        await navigator.share({
+          title: `${activeView.toUpperCase()} - Dar Paint`,
+          text: 'Please find attached document',
+          files: [file],
+        });
+      } else {
+        // Fallback: Download the file
+        const url = URL.createObjectURL(file);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${activeView.toUpperCase()}-${Date.now()}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      alert('Unable to share PDF. Please use "Print / Save as PDF" instead.');
+    }
+  }, [activeView, deliveryRef, quotationRef, receiptRef, invoiceRef]);
 
   // ==================== Handlers ====================
   const updateDeliveryRow = useCallback((index: number, field: keyof ProductRow, value: string | number) => {
@@ -299,6 +386,8 @@ export default function AllDocumentsPage() {
     setPaymentStatus('Paid');
     setReceiptCustomerName('darPaint');
     setReceiptCustomerPhone('+256 702 096 737');
+    setAmountPaid(0);
+    setBalance(0);
     
     // Invoice
     setInvoiceProducts(defaultInvoiceProducts);
@@ -442,19 +531,22 @@ export default function AllDocumentsPage() {
 
   return (
     <div className="app-container">
-      {/* Print Options - Only Print/Save as PDF */}
+      {/* Export Options - Print and Share */}
       <div className="pdf-options-bar no-print">
         <div className="options-header">
-          <i className="fas fa-print"></i> Print Options
+          <i className="fas fa-print"></i> Export Options
         </div>
         <div className="options-buttons">
           <button className="option-btn print-btn" onClick={handlePrint}>
             <i className="fas fa-print"></i> Print / Save as PDF
             <span className="recommended-badge">Best Quality</span>
           </button>
+          <button className="option-btn share-btn" onClick={handleSharePDF}>
+            <i className="fas fa-share-alt"></i> Share PDF
+          </button>
         </div>
         <div className="quality-note">
-          <i className="fas fa-info-circle"></i> On mobile, select "Save as PDF" or "Save to Files" from the print dialog
+          <i className="fas fa-info-circle"></i> Use "Share PDF" for WhatsApp or "Print" for best quality
         </div>
       </div>
 
@@ -614,7 +706,7 @@ export default function AllDocumentsPage() {
         </div>
       )}
 
-      {/* Receipt View */}
+      {/* Receipt View with Amount Paid and Balance Fields */}
       {activeView === 'receipt' && receiptDate && receiptNumber && (
         <div ref={receiptRef}>
           <div className="document-card print-one-page">
@@ -649,14 +741,55 @@ export default function AllDocumentsPage() {
                     <option>Paid</option><option>Partial</option><option>Pending</option>
                   </select>
                 </div>
+                <div className="compact-field">
+                  <label>Total Amount Due (UGX)</label>
+                  <input 
+                    type="number" 
+                    value={receiptTotal} 
+                    readOnly
+                    className="receipt-amount-input"
+                    style={{ fontWeight: 'bold', background: '#f8fafc' }}
+                  />
+                </div>
+                <div className="compact-field">
+                  <label>Amount Paid (UGX)</label>
+                  <input 
+                    type="number" 
+                    value={amountPaid} 
+                    onChange={(e) => setAmountPaid(Number(e.target.value))}
+                    className="receipt-amount-input"
+                    placeholder="Enter amount paid"
+                    min="0"
+                  />
+                </div>
+                <div className="compact-field">
+                  <label>Balance (UGX)</label>
+                  <input 
+                    type="number" 
+                    value={balance} 
+                    readOnly
+                    className="receipt-amount-input balance-display"
+                    style={{ 
+                      fontWeight: 'bold', 
+                      color: balance === 0 ? '#10b981' : balance > 0 && balance < receiptTotal ? '#f59e0b' : '#dc2626',
+                      background: balance === 0 ? '#f0fdf4' : balance > 0 && balance < receiptTotal ? '#fffbeb' : '#fef2f2'
+                    }}
+                  />
+                </div>
               </div>
 
               {renderProductTable(receiptProducts, updateReceiptRow, removeReceiptRow, addReceiptRow, true, receiptTotal)}
 
               <div className="receipt-summary">
-                <div><strong>Amount Paid:</strong> {formatUGX(receiptTotal)}</div>
-                <div><strong>Method:</strong> {paymentMethod}</div>
-                <div><strong>Status:</strong> <span className="status-badge">{paymentStatus}</span></div>
+                <div><strong>Total Amount:</strong> {formatUGX(receiptTotal)}</div>
+                <div><strong>Amount Paid:</strong> {formatUGX(amountPaid)}</div>
+                <div><strong>Balance:</strong> {formatUGX(balance)}</div>
+                <div>
+                  <strong>Status:</strong> 
+                  <span className={`status-badge ${balance === 0 ? 'paid' : balance > 0 && balance < receiptTotal ? 'partial' : 'pending'}`}>
+                    {balance === 0 ? 'Paid in Full' : balance > 0 && balance < receiptTotal ? 'Partial Payment' : 'Pending'}
+                  </span>
+                </div>
               </div>
 
               <div className="compact-signatures">
