@@ -104,7 +104,8 @@ export default function AllDocumentsPage() {
   const [receiptCustomerName, setReceiptCustomerName] = useState('darPaint');
   const [receiptCustomerPhone, setReceiptCustomerPhone] = useState('+256 702 096 737');
   
-  // NEW: Payment tracking fields for receipt
+  // NEW: Payment tracking fields for receipt - Now Total Amount Due is editable
+  const [customTotalAmount, setCustomTotalAmount] = useState<number>(0);
   const [amountPaid, setAmountPaid] = useState<number>(0);
   const [balance, setBalance] = useState<number>(0);
 
@@ -147,15 +148,20 @@ export default function AllDocumentsPage() {
   const receiptTotal = receiptProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
   const invoiceTotal = invoiceProducts.reduce((sum, row) => sum + row.qty * row.unitPrice, 0);
 
-  // Auto-calculate balance when total or amount paid changes
+  // Auto-calculate balance when customTotalAmount or amountPaid changes
   useEffect(() => {
-    if (receiptTotal > 0) {
-      const calculatedBalance = receiptTotal - amountPaid;
-      setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
-    } else if (receiptTotal === 0) {
-      setBalance(0);
+    // When customTotalAmount is 0, use receiptTotal from products
+    const totalToUse = customTotalAmount > 0 ? customTotalAmount : receiptTotal;
+    const calculatedBalance = totalToUse - amountPaid;
+    setBalance(calculatedBalance > 0 ? calculatedBalance : 0);
+  }, [customTotalAmount, amountPaid, receiptTotal]);
+
+  // Auto-set customTotalAmount to receiptTotal when products change (but allow manual override)
+  useEffect(() => {
+    if (customTotalAmount === 0 && receiptTotal > 0) {
+      setCustomTotalAmount(receiptTotal);
     }
-  }, [receiptTotal, amountPaid]);
+  }, [receiptTotal, customTotalAmount]);
 
   // ==================== PDF Generation Functions ====================
 
@@ -386,6 +392,7 @@ export default function AllDocumentsPage() {
     setPaymentStatus('Paid');
     setReceiptCustomerName('darPaint');
     setReceiptCustomerPhone('+256 702 096 737');
+    setCustomTotalAmount(0);
     setAmountPaid(0);
     setBalance(0);
     
@@ -706,7 +713,7 @@ export default function AllDocumentsPage() {
         </div>
       )}
 
-      {/* Receipt View with Amount Paid and Balance Fields */}
+      {/* Receipt View with Editable Total Amount Due */}
       {activeView === 'receipt' && receiptDate && receiptNumber && (
         <div ref={receiptRef}>
           <div className="document-card print-one-page">
@@ -741,15 +748,23 @@ export default function AllDocumentsPage() {
                     <option>Paid</option><option>Partial</option><option>Pending</option>
                   </select>
                 </div>
+                {/* EDITABLE: Total Amount Due Field */}
                 <div className="compact-field">
                   <label>Total Amount Due (UGX)</label>
                   <input 
                     type="number" 
-                    value={receiptTotal} 
-                    readOnly
+                    value={customTotalAmount || receiptTotal} 
+                    onChange={(e) => setCustomTotalAmount(Number(e.target.value))}
                     className="receipt-amount-input"
-                    style={{ fontWeight: 'bold', background: '#f8fafc' }}
+                    style={{ fontWeight: 'bold', borderColor: '#e6a017' }}
+                    min="0"
+                    step="1000"
                   />
+                  {customTotalAmount > 0 && (
+                    <span style={{ fontSize: '0.6rem', color: '#6b7280', marginTop: '2px' }}>
+                      Subtotal from products: {formatUGX(receiptTotal)}
+                    </span>
+                  )}
                 </div>
                 <div className="compact-field">
                   <label>Amount Paid (UGX)</label>
@@ -760,6 +775,7 @@ export default function AllDocumentsPage() {
                     className="receipt-amount-input"
                     placeholder="Enter amount paid"
                     min="0"
+                    step="1000"
                   />
                 </div>
                 <div className="compact-field">
@@ -771,8 +787,8 @@ export default function AllDocumentsPage() {
                     className="receipt-amount-input balance-display"
                     style={{ 
                       fontWeight: 'bold', 
-                      color: balance === 0 ? '#10b981' : balance > 0 && balance < receiptTotal ? '#f59e0b' : '#dc2626',
-                      background: balance === 0 ? '#f0fdf4' : balance > 0 && balance < receiptTotal ? '#fffbeb' : '#fef2f2'
+                      color: balance === 0 ? '#10b981' : balance > 0 && balance < (customTotalAmount || receiptTotal) ? '#f59e0b' : '#dc2626',
+                      background: balance === 0 ? '#f0fdf4' : balance > 0 && balance < (customTotalAmount || receiptTotal) ? '#fffbeb' : '#fef2f2'
                     }}
                   />
                 </div>
@@ -781,13 +797,13 @@ export default function AllDocumentsPage() {
               {renderProductTable(receiptProducts, updateReceiptRow, removeReceiptRow, addReceiptRow, true, receiptTotal)}
 
               <div className="receipt-summary">
-                <div><strong>Total Amount:</strong> {formatUGX(receiptTotal)}</div>
+                <div><strong>Total Amount:</strong> {formatUGX(customTotalAmount || receiptTotal)}</div>
                 <div><strong>Amount Paid:</strong> {formatUGX(amountPaid)}</div>
                 <div><strong>Balance:</strong> {formatUGX(balance)}</div>
                 <div>
                   <strong>Status:</strong> 
-                  <span className={`status-badge ${balance === 0 ? 'paid' : balance > 0 && balance < receiptTotal ? 'partial' : 'pending'}`}>
-                    {balance === 0 ? 'Paid in Full' : balance > 0 && balance < receiptTotal ? 'Partial Payment' : 'Pending'}
+                  <span className={`status-badge ${balance === 0 ? 'paid' : balance > 0 && balance < (customTotalAmount || receiptTotal) ? 'partial' : 'pending'}`}>
+                    {balance === 0 ? 'Paid in Full' : balance > 0 && balance < (customTotalAmount || receiptTotal) ? 'Partial Payment' : 'Pending'}
                   </span>
                 </div>
               </div>
