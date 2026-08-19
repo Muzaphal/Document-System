@@ -103,6 +103,8 @@ export default function AllDocumentsPage() {
   const [paymentStatus, setPaymentStatus] = useState('Paid');
   const [receiptCustomerName, setReceiptCustomerName] = useState('darPaint');
   const [receiptCustomerPhone, setReceiptCustomerPhone] = useState('+256 702 096 737');
+  // NEW: Customer Full Name field for receipt
+  const [receiptCustomerFullName, setReceiptCustomerFullName] = useState('');
   
   // NEW: Payment tracking fields for receipt - Now Total Amount Due is editable
   const [customTotalAmount, setCustomTotalAmount] = useState<number>(0);
@@ -392,6 +394,7 @@ export default function AllDocumentsPage() {
     setPaymentStatus('Paid');
     setReceiptCustomerName('darPaint');
     setReceiptCustomerPhone('+256 702 096 737');
+    setReceiptCustomerFullName(''); // Reset customer full name
     setCustomTotalAmount(0);
     setAmountPaid(0);
     setBalance(0);
@@ -713,7 +716,7 @@ export default function AllDocumentsPage() {
         </div>
       )}
 
-      {/* Receipt View with Editable Total Amount Due */}
+      {/* Receipt View with Customer Name and Editable Total Amount Due */}
       {activeView === 'receipt' && receiptDate && receiptNumber && (
         <div ref={receiptRef}>
           <div className="document-card print-one-page">
@@ -727,6 +730,18 @@ export default function AllDocumentsPage() {
                 <div className="compact-field">
                   <label>Date</label>
                   <input type="date" value={receiptDate} onChange={(e) => setReceiptDate(e.target.value)} />
+                </div>
+                {/* NEW: Customer Full Name Field - Placed prominently */}
+                <div className="compact-field" style={{ gridColumn: 'span 2' }}>
+                  <label>Customer Name</label>
+                  <input 
+                    type="text" 
+                    value={receiptCustomerFullName} 
+                    onChange={(e) => setReceiptCustomerFullName(e.target.value)}
+                    className="receipt-amount-input"
+                    placeholder="Enter customer full name"
+                    style={{ fontWeight: '500', borderColor: '#0f2b3d' }}
+                  />
                 </div>
                 <div className="compact-field">
                   <label>Received From</label>
@@ -797,6 +812,7 @@ export default function AllDocumentsPage() {
               {renderProductTable(receiptProducts, updateReceiptRow, removeReceiptRow, addReceiptRow, true, receiptTotal)}
 
               <div className="receipt-summary">
+                <div><strong>Customer:</strong> {receiptCustomerFullName || receiptCustomerName}</div>
                 <div><strong>Total Amount:</strong> {formatUGX(customTotalAmount || receiptTotal)}</div>
                 <div><strong>Amount Paid:</strong> {formatUGX(amountPaid)}</div>
                 <div><strong>Balance:</strong> {formatUGX(balance)}</div>
